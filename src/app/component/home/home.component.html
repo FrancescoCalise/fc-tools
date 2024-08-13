@@ -1,1 +1,9 @@
-<p>home works!</p>
+<div class="dashboard">
+    <div 
+      class="feature-card" 
+      *ngFor="let feature of features" 
+      (click)="navigateToFeature(feature.path)">
+      {{ feature.name }}
+    </div>
+  </div>
+  

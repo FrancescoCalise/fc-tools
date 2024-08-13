@@ -1,0 +1,29 @@
+<div class="arkham-horror-tools">
+  <h2>Arkham Horror Tools - Token Bag</h2>
+
+  <div class="input-section">
+    <input [(ngModel)]="tokenName" placeholder="Token Name" />
+    <input [(ngModel)]="tokenCount" type="number" min="1" placeholder="Count" />
+    <button class="styled-button" (click)="addToken()">Add Token</button>
+  </div>
+
+  <div class="actions-section">
+    <button class="styled-button" (click)="drawTokens(2)">Draw 2 Tokens</button>
+    <button class="styled-button" (click)="shaffleBag()">Reset Bag</button>
+    <button class="styled-button" (click)="cleanBag()">Clean Bag</button>
+  </div>
+
+  <div class="bag-status">
+    <h3>Tokens in Bag: {{ tokens.length }}</h3>
+    <ul>
+      <li *ngFor="let token of tokens">{{ token.name }}</li>
+    </ul>
+  </div>
+
+  <div class="extracted-status">
+    <h3>Extracted Tokens: {{ extractedTokens.length }}</h3>
+    <ul>
+      <li *ngFor="let token of extractedTokens">{{ token.name }}</li>
+    </ul>
+  </div>
+</div>
