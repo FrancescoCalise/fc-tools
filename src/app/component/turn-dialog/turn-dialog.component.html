@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Tokens Extracted This Turn</h2>
+<div mat-dialog-content>
+  <p>You have extracted <strong>{{ data.tokens.length }}</strong> token(s) this turn:</p>
+  <ul>
+    <li *ngFor="let token of data.tokens">{{ token.name }}</li>
+  </ul>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>OK</button>
+</div>

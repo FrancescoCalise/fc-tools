@@ -17,9 +17,7 @@ interface Feature {
 })
 export class HomeComponent {
   features: Feature[] = [
-    { name: 'Arkham horror tools', path: '/arkham-horror-tools' },
-    { name: 'Feature 2', path: '/feature2' },
-    { name: 'Feature 3', path: '/feature3' }
+    { name: 'Arkham horror tools', path: '/arkham-horror-tools' }
   ];
 
   constructor(private router: Router) {}

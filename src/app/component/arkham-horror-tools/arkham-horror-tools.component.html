@@ -2,28 +2,62 @@
   <h2>Arkham Horror Tools - Token Bag</h2>
 
   <div class="input-section">
-    <input [(ngModel)]="tokenName" placeholder="Token Name" />
-    <input [(ngModel)]="tokenCount" type="number" min="1" placeholder="Count" />
-    <button class="styled-button" (click)="addToken()">Add Token</button>
+    <mat-form-field appearance="outline">
+      <mat-label>Token Name</mat-label>
+      <mat-select [(ngModel)]="selectedToken">
+        <mat-option *ngFor="let token of availableTokens" [value]="token">
+          {{ token }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Count</mat-label>
+      <input matInput [(ngModel)]="tokenCount" type="number" min="1" max="9">
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="addToken()" [disabled]="selectedToken === ''" matTooltip="Aggiunge i token alla sacca">
+      Add Token
+    </button>
   </div>
 
   <div class="actions-section">
-    <button class="styled-button" (click)="drawTokens(2)">Draw 2 Tokens</button>
-    <button class="styled-button" (click)="shaffleBag()">Reset Bag</button>
-    <button class="styled-button" (click)="cleanBag()">Clean Bag</button>
+    <button mat-raised-button color="accent" (click)="drawTokens(2)" [disabled]="tokens.length === 0" matTooltip="Pesca i token dalla sacca">
+      Draw 2 Tokens
+    </button>
+    <button mat-raised-button color="warn" (click)="resetBag()" matTooltip="Rimescola gli estratti nella sacca">
+      Reset Bag
+    </button>
+    <button mat-raised-button color="warn" (click)="cleanBag()" matTooltip="Elimina la sacca">
+      Clean Bag
+    </button>
+  </div>
+
+  <div class="turn-actions-section">
+    <button mat-raised-button color="accent" (click)="openTurnDialog()" [disabled]="turnExtractedTokens.length === 0" matTooltip="Visualizza i token estratti in questo turno">
+      View Extracted Tokens This Turn
+    </button>
+    <button mat-raised-button color="primary" (click)="endTurn()" matTooltip="Conferma la fine del turno e resetta i token estratti">
+      End Turn
+    </button>
   </div>
 
   <div class="bag-status">
     <h3>Tokens in Bag: {{ tokens.length }}</h3>
     <ul>
-      <li *ngFor="let token of tokens">{{ token.name }}</li>
+      <li *ngFor="let token of getTokenCounts()">
+        {{ token.count }} x {{ token.name }}
+      </li>
     </ul>
   </div>
 
   <div class="extracted-status">
     <h3>Extracted Tokens: {{ extractedTokens.length }}</h3>
     <ul>
-      <li *ngFor="let token of extractedTokens">{{ token.name }}</li>
+      <li *ngFor="let token of extractedTokens; let i = index" 
+          [ngClass]="{ 'last-extracted': i >= extractedTokens.length - 2 }">
+        {{ token.name }}
+      </li>
     </ul>
   </div>
 </div>
