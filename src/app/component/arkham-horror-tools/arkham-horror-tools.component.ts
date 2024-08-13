@@ -20,12 +20,22 @@ export class ArkhamHorrorToolsComponent {
   predefinedTokens: string[] = ['EVENTO', 'DESTINI', 'TERRORE', 'PORTALE', 'RESA DEI CONTI', 'VUOTO', 'MOSTRO', 'QUOTIDIANO'];
   availableTokens: string[] = [...this.predefinedTokens];
   selectedToken: string = this.availableTokens[0];
-  tokenCount: number = 1;
+  tokenCount: number = 1;  // Inizializza il contatore a 1
   tokens: { name: string }[] = [];
   extractedTokens: { name: string }[] = [];
   turnExtractedTokens: { name: string }[] = [];
 
   constructor(public dialog: MatDialog) {}
+
+  increaseCount(): void {
+    this.tokenCount++;
+  }
+
+  decreaseCount(): void {
+    if (this.tokenCount > 1) {
+      this.tokenCount--;
+    }
+  }
 
   addToken(): void {
     for (let i = 0; i < this.tokenCount; i++) {
@@ -33,7 +43,7 @@ export class ArkhamHorrorToolsComponent {
     }
     this.availableTokens = this.availableTokens.filter(token => token !== this.selectedToken);
     this.selectedToken = this.availableTokens.length > 0 ? this.availableTokens[0] : '';
-    this.tokenCount = 1;
+    this.tokenCount = 1;  // Resetta il contatore a 1 dopo aver aggiunto i token
     this.shuffleBag();
   }
 
@@ -72,7 +82,7 @@ export class ArkhamHorrorToolsComponent {
   openTurnDialog(): void {
     this.dialog.open(TurnDialogComponent, {
       data: { tokens: this.turnExtractedTokens },
-      width: '400px',  // Imposta la larghezza della finestra di dialogo
+      width: '400px',
     });
   }
 
