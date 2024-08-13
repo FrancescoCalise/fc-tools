@@ -2,7 +2,9 @@
 <div mat-dialog-content>
   <p>You have extracted <strong>{{ data.tokens.length }}</strong> token(s) this turn:</p>
   <ul>
-    <li *ngFor="let token of data.tokens">{{ token.name }}</li>
+    <li *ngFor="let token of tokenCounts">
+      {{ token.count }} - {{ token.name }}
+    </li>
   </ul>
 </div>
 <div mat-dialog-actions>

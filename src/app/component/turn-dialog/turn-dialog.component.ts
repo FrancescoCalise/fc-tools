@@ -10,5 +10,24 @@ import { SharedModule } from '../../shared/shared.module';
   imports: [SharedModule],
 })
 export class TurnDialogComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { tokens: { name: string }[] }) {}
+  tokenCounts: { name: string, count: number }[] = [];
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { tokens: { name: string }[] }) {
+    this.tokenCounts = this.getTokenCounts(data.tokens);
+  }
+
+  getTokenCounts(tokens: { name: string }[]): { name: string, count: number }[] {
+    const tokenCounts = tokens.reduce((acc, token) => {
+      if (!acc[token.name]) {
+        acc[token.name] = 0;
+      }
+      acc[token.name]++;
+      return acc;
+    }, {} as { [key: string]: number });
+
+    return Object.keys(tokenCounts).map(key => ({
+      name: key,
+      count: tokenCounts[key]
+    }));
+  }
 }
