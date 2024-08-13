@@ -21,21 +21,12 @@ export class ArkhamHorrorToolsComponent {
   availableTokens: string[] = [...this.predefinedTokens];
   selectedToken: string = this.availableTokens[0];
   tokenCount: number = 1;  // Inizializza il contatore a 1
+  countOptions: number[] = [1, 2, 3, 4, 5];  // Opzioni per il contatore
   tokens: { name: string }[] = [];
   extractedTokens: { name: string }[] = [];
   turnExtractedTokens: { name: string }[] = [];
 
   constructor(public dialog: MatDialog) {}
-
-  increaseCount(): void {
-    this.tokenCount++;
-  }
-
-  decreaseCount(): void {
-    if (this.tokenCount > 1) {
-      this.tokenCount--;
-    }
-  }
 
   addToken(): void {
     for (let i = 0; i < this.tokenCount; i++) {
@@ -43,7 +34,7 @@ export class ArkhamHorrorToolsComponent {
     }
     this.availableTokens = this.availableTokens.filter(token => token !== this.selectedToken);
     this.selectedToken = this.availableTokens.length > 0 ? this.availableTokens[0] : '';
-    this.tokenCount = 1;  // Resetta il contatore a 1 dopo aver aggiunto i token
+    this.tokenCount = 1;
     this.shuffleBag();
   }
 
