@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Initialize Bag</h2>
+<div mat-dialog-content>
+  <p>Select the tokens and their quantity to add to the bag:</p>
+  <div *ngFor="let token of selectedTokens">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ token.name }}</mat-label>
+      <mat-select [(ngModel)]="token.count">
+        <mat-option *ngFor="let option of [0, 1, 2, 3, 4, 5]" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button color="primary" (click)="onConfirm()">Confirm</button>
+</div>

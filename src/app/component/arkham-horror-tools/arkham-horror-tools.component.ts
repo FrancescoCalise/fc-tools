@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { MatDialog } from '@angular/material/dialog';
-import { TurnDialogComponent } from '../turn-dialog/turn-dialog.component';
+import { TurnDialogComponent } from './turn-dialog/turn-dialog.component';
+import { InitBagDialogComponent } from './init-bag-dialog/init-bag-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface Token {
   name: string;
@@ -16,29 +18,32 @@ interface Token {
 })
 
 export class ArkhamHorrorToolsComponent {
-
-  predefinedTokens: string[] = ['EVENTO', 'DESTINI', 'TERRORE', 'PORTALE', 'RESA DEI CONTI', 'VUOTO', 'MOSTRO', 'QUOTIDIANO'];
-  availableTokens: string[] = [...this.predefinedTokens];
-  selectedToken: string = this.availableTokens[0];
-  tokenCount: number = 1;  // Inizializza il contatore a 1
-  countOptions: number[] = [1, 2, 3, 4, 5];  // Opzioni per il contatore
   tokens: { name: string }[] = [];
   extractedTokens: { name: string }[] = [];
   turnExtractedTokens: { name: string }[] = [];
 
-  constructor(public dialog: MatDialog) {}
+  predefinedTokens: string[] = ['EVENTO', 'DESTINI', 'TERRORE', 'PORTALE', 'RESA DEI CONTI', 'VUOTO', 'MOSTRO', 'QUOTIDIANO'];
+  availableTokens: string[] = [...this.predefinedTokens];
+  selectedToken: string = this.availableTokens[0];
+  version: string = '1.0.6';
+  lastTokenDrawn: Token[] = [];
+  isInitBag = false;
 
-  addToken(): void {
-    for (let i = 0; i < this.tokenCount; i++) {
-      this.tokens.push({ name: this.selectedToken });
-    }
-    this.availableTokens = this.availableTokens.filter(token => token !== this.selectedToken);
-    this.selectedToken = this.availableTokens.length > 0 ? this.availableTokens[0] : '';
-    this.tokenCount = 1;
-    this.shuffleBag();
+  constructor(public dialog: MatDialog, private snackBar: MatSnackBar) {}
+
+
+
+  showLastTokenDrawn(): void {
+    // Mostra il toast con i token estratti
+    this.snackBar.open(`Extracted Tokens: ${this.lastTokenDrawn.map(token => token.name).join(', ')}`, '', {
+      duration: 3000,
+      panelClass: ["custom-snackbar"]
+    });
   }
 
   drawTokens(count: number): void {
+    this.lastTokenDrawn =  [];  // Per tenere traccia dei token estratti
+
     while (count > 0) {
       if (this.tokens.length === 0) {
         this.tokens = [...this.extractedTokens];
@@ -49,8 +54,15 @@ export class ArkhamHorrorToolsComponent {
       const drawnToken = this.tokens.splice(index, 1)[0];
       this.extractedTokens.push(drawnToken);
       this.turnExtractedTokens.push(drawnToken);
+      this.lastTokenDrawn.push(drawnToken);  // Aggiungi il token estratto alla lista temporanea
       count--;
     }
+
+    // Mostra il toast con i token estratti
+    this.snackBar.open(`Extracted Tokens: ${this.lastTokenDrawn.map(token => token.name).join(', ')}`, '', {
+      duration: 3000,
+      panelClass: 'custom-snackbar'
+    });
   }
 
   resetBag(): void {
@@ -68,6 +80,7 @@ export class ArkhamHorrorToolsComponent {
     this.turnExtractedTokens = [];
     this.availableTokens = [...this.predefinedTokens];
     this.selectedToken = this.availableTokens.length > 0 ? this.availableTokens[0] : '';
+    this.isInitBag = false;
   }
 
   openTurnDialog(): void {
@@ -101,5 +114,47 @@ export class ArkhamHorrorToolsComponent {
       name: key,
       count: tokenCounts[key]
     }));
+  }
+
+  openInitBagDialog(): void {
+    const dialogRef = this.dialog.open(InitBagDialogComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe((result:{ name: string, count: number }[]) => {
+      if (result) {
+        // Popola la bag con i token selezionati, escludendo quelli con count 0
+        this.tokens = [];
+        result.forEach(token => {
+          if (token.count > 0) {
+            for (let i = 0; i < token.count; i++) {
+              this.tokens.push({ name: token.name });
+            }
+          }
+        });
+        this.shuffleBag();
+        this.isInitBag = true;
+      }
+    });
+  }
+
+  openAddTokenDialog(): void {
+    const dialogRef = this.dialog.open(InitBagDialogComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe((result: { name: string, count: number }[]) => {
+      if (result) {
+        // Aggiungi i token selezionati alla bag esistente, escludendo quelli con count 0
+        result.forEach(token => {
+          if (token.count > 0) {
+            for (let i = 0; i < token.count; i++) {
+              this.tokens.push({ name: token.name });
+            }
+          }
+        });
+        this.shuffleBag();
+      }
+    });
   }
 }
