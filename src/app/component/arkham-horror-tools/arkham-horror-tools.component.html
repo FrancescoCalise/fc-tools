@@ -1,54 +1,69 @@
 <div class="arkham-horror-tools">
-  <h2>Arkham Horror Tools - Token Bag</h2>
+  <h2 class="text-center">Arkham Horror Tools - Token Bag</h2>
 
   <!-- Mostra InitBag solo se la sacca è vuota -->
-  <div *ngIf="isInitBag">
+  <div *ngIf="!isInitBag" class="text-center">
     <button mat-raised-button color="primary" (click)="openInitBagDialog()">InitBag</button>
   </div>
 
   <!-- Mostra i pulsanti quando la sacca è inizializzata -->
-  <div *ngIf="tokens.length > 0" class="button-grid">
-    <div class="button-row">
-      <button mat-raised-button color="primary" (click)="openAddTokenDialog()">AddToken</button>
-      <button mat-raised-button color="accent" (click)="drawTokens(2)">Draw 2 Tokens</button>
+  <div *ngIf="isInitBag" class="container">
+    <div class="row mb-3">
+      <div class="col-6">
+        <button mat-raised-button color="primary" (click)="openAddTokenDialog()">AddToken</button>
+      </div>
+      <div class="col-6">
+        <button mat-raised-button color="accent" (click)="drawTokens(2)">Draw 2 Tokens</button>
+      </div>
     </div>
-    <div class="button-row">
-      <button mat-raised-button color="warn" (click)="resetBag()">Reset Bag</button>
-      <button mat-raised-button color="warn" (click)="cleanBag()">Clean Bag</button>
+    <div class="row mb-3">
+      <div class="col-6">
+        <button mat-raised-button color="warn" (click)="resetBag()">Reset Bag</button>
+      </div>
+      <div class="col-6">
+        <button mat-raised-button color="warn" (click)="cleanBag()">Clean Bag</button>
+      </div>
     </div>
-    <div class="button-row">
-      <button mat-raised-button color="accent" (click)="showLastTokenDrawn()" *ngIf="lastTokenDrawn.length > 0">
-        Show Last Tokens Drawn
-      </button>
-      <button mat-raised-button color="accent" (click)="openTurnDialog()" *ngIf="turnExtractedTokens.length > 0">
-        Show Tokens Drawn in this round
-      </button>
+    <div class="row mb-3">
+      <div class="col-6">
+        <button mat-raised-button color="accent" (click)="showLastTokenDrawn()" *ngIf="lastTokenDrawn.length > 0">
+          Last Tokens Drawn
+        </button>
+      </div>
+      <div class="col-6">
+        <button mat-raised-button color="accent" (click)="openTurnDialog()" *ngIf="turnExtractedTokens.length > 0">
+          Tokens Drawn in this round
+        </button>
+      </div>
     </div>
-    <div class="button-row" *ngIf="turnExtractedTokens.length > 0">
-      <button mat-raised-button color="primary" (click)="endTurn()">End Turn</button>
+    <div class="row" *ngIf="turnExtractedTokens.length > 0">
+      <div class="col-12">
+        <button mat-raised-button color="primary" (click)="endTurn()">End Turn</button>
+      </div>
     </div>
   </div>
 
   <!-- Sezione per la lista dei token nella bag -->
-  <div class="bag-status" *ngIf="tokens.length > 0">
-    <h3>Tokens in Bag: {{ tokens.length }}</h3>
-    <ul>
-      <li *ngFor="let token of getTokenCounts()">
+  <div class="bag-status mt-4" *ngIf="isInitBag">
+    <h3 class="text-center">Tokens in Bag: {{ tokens.length }}</h3>
+    <div class="row">
+      <div *ngFor="let token of getTokenCounts()" class="col-6 text-center">
         {{ token.count }} x {{ token.name }}
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 
   <!-- Sezione per la lista dei token estratti -->
-  <div class="extracted-status" *ngIf="extractedTokens.length > 0">
-    <h3>Extracted Tokens: {{ extractedTokens.length }}</h3>
-    <ul>
-      <li *ngFor="let token of extractedTokens; let i = index" 
-          [ngClass]="{ 'last-extracted': i >= extractedTokens.length - 2 }">
+  <div class="extracted-status mt-4" *ngIf="isInitBag">
+    <h3 class="text-center">Extracted Tokens: {{ extractedTokens.length }}</h3>
+    <div class="row">
+      <div *ngFor="let token of extractedTokens; let i = index"
+        [ngClass]="{ 'last-extracted': i >= extractedTokens.length - 2 }" class="col-6 text-center">
         {{ token.name }}
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 
-  <p class="version">Version: {{version}}</p>
+
+  <p class="version text-center mt-4">Version: {{version}}</p>
 </div>
